@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Project Management SaaS</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="app-shell">
+        <header class="topbar">
+            <div class="topbar-brand">
+                <div class="brand-mark">PM</div>
+                <div>
+                    <p class="topbar-label">Project Management SaaS</p>
+                    <h3>Operations Console</h3>
+                </div>
+            </div>
+
+            <nav class="topbar-menu" aria-label="Top menu">
+                <a href="#overview">Overview</a>
+                <a href="#authentication">Authentication</a>
+                <a href="#workspace">Workspace</a>
+                <a href="#delivery">Delivery</a>
+                <a href="/swagger" target="_blank" rel="noreferrer">Swagger</a>
+            </nav>
+
+            <div class="topbar-meta">
+                <div class="meta-chip">
+                    <span class="meta-label">Workspace</span>
+                    <strong id="topWorkspaceName">Not connected</strong>
+                </div>
+                <div class="meta-chip">
+                    <span class="meta-label">Session</span>
+                    <strong id="authStatus">Signed out</strong>
+                </div>
+                <button id="signOutBtn" class="ghost-btn" type="button">Sign Out</button>
+            </div>
+        </header>
+
+        <aside class="sidebar">
+            <div class="sidebar-intro">
+                <p class="eyebrow">Navigation</p>
+                <h2>Control Center</h2>
+                <p>
+                    A compact presentation layer for demonstrating authentication,
+                    tenant data, project delivery, and live API interactions.
+                </p>
+            </div>
+
+            <nav class="sidebar-nav" aria-label="Side menu">
+                <a class="nav-link active" href="#overview">Executive Overview</a>
+                <a class="nav-link" href="#authentication">Authentication</a>
+                <a class="nav-link" href="#workspace">Tenant Workspace</a>
+                <a class="nav-link" href="#delivery">Projects and Tasks</a>
+                <a class="nav-link" href="#console">Request Console</a>
+            </nav>
+
+            <div class="sidebar-card">
+                <span class="card-label">Current User</span>
+                <strong id="topUserMeta">Anonymous</strong>
+                <p>Role-aware API access with JWT bearer authentication.</p>
+            </div>
+
+            <div class="sidebar-card">
+                <span class="card-label">Capabilities</span>
+                <ul class="sidebar-list">
+                    <li>Organization registration</li>
+                    <li>JWT login, refresh, and sign out</li>
+                    <li>Workspace details and user directory</li>
+                    <li>Activity logs and request console</li>
+                    <li>Dashboard charts and KPI tracking</li>
+                    <li>Project planning and project directory</li>
+                    <li>Task creation and member assignment</li>
+                    <li>Task status visibility and due dates</li>
+                    <li>Swagger API exploration</li>
+                </ul>
+            </div>
+
+            <div class="sidebar-card">
+                <span class="card-label">Feature Areas</span>
+                <ul class="sidebar-list">
+                    <li>Authentication workflows</li>
+                    <li>Tenant workspace operations</li>
+                    <li>Project and task delivery</li>
+                    <li>Operational diagnostics</li>
+                </ul>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <section id="overview" class="content-section hero-section">
+                <div class="section-heading">
+                    <p class="section-kicker">Executive Overview</p>
+                    <h2>Professional multi-tenant management workspace</h2>
+                    <p>
+                        This UI is served directly from the ASP.NET Core API and is structured like an internal SaaS
+                        operations console: a top command bar, a left navigation rail, and task-focused content panels.
+                    </p>
+                </div>
+
+                <div class="metric-grid">
+                    <article class="metric-card">
+                        <span class="metric-label">Architecture</span>
+                        <strong>Clean Architecture</strong>
+                        <p>Domain, application, infrastructure, and presentation concerns stay separated.</p>
+                    </article>
+                    <article class="metric-card">
+                        <span class="metric-label">Security</span>
+                        <strong>JWT + RBAC</strong>
+                        <p>Authenticated routes enforce Admin, Manager, and Member responsibilities.</p>
+                    </article>
+                    <article class="metric-card">
+                        <span class="metric-label">Persistence</span>
+                        <strong>SQL Server + EF Core</strong>
+                        <p>Startup creates the schema automatically so the demo can run immediately.</p>
+                    </article>
+                </div>
+
+                <div class="dashboard-band">
+                    <div class="section-header dashboard-header">
+                        <div>
+                            <p class="section-kicker">Live Dashboard</p>
+                            <h2>Portfolio KPIs and delivery charts</h2>
+                        </div>
+                        <span class="mini-badge">Derived from current API data</span>
+                    </div>
+
+                    <div class="kpi-grid">
+                        <article class="panel kpi-card">
+                            <span class="metric-label">Projects</span>
+                            <strong id="kpiProjects">0</strong>
+                            <p id="kpiProjectsMeta">Load projects to view portfolio coverage.</p>
+                        </article>
+                        <article class="panel kpi-card">
+                            <span class="metric-label">Tasks</span>
+                            <strong id="kpiTasks">0</strong>
+                            <p id="kpiTasksMeta">Task execution totals appear here.</p>
+                        </article>
+                        <article class="panel kpi-card">
+                            <span class="metric-label">Completion</span>
+                            <strong id="kpiCompletion">0%</strong>
+                            <p id="kpiCompletionMeta">Completed task ratio across all projects.</p>
+                        </article>
+                        <article class="panel kpi-card">
+                            <span class="metric-label">Team</span>
+                            <strong id="kpiMembers">0</strong>
+                            <p id="kpiMembersMeta">Members available for assignment.</p>
+                        </article>
+                    </div>
+
+                    <div class="dashboard-grid">
+                        <article class="panel chart-panel">
+                            <div class="panel-title-row">
+                                <h3>Task Delivery Pace</h3>
+                                <span class="mini-badge" id="dashboardCompletionBadge">No data</span>
+                            </div>
+                            <div class="chart-centerpiece">
+                                <div id="completionDonut" class="donut-chart">
+                                    <div class="donut-chart-inner">
+                                        <strong id="completionDonutValue">0%</strong>
+                                        <span>Done</span>
+                                    </div>
+                                </div>
+                                <div class="chart-copy">
+                                    <strong id="dashboardOpenTasks">0 open tasks</strong>
+                                    <p id="dashboardOpenTasksMeta">Create or load projects to populate the dashboard.</p>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="panel chart-panel">
+                            <div class="panel-title-row">
+                                <h3>Task Status Breakdown</h3>
+                                <span class="mini-badge">Execution mix</span>
+                            </div>
+                            <div id="taskStatusChart" class="bar-chart">
+                                <p class="empty-state">No task data loaded.</p>
+                            </div>
+                        </article>
+
+                        <article class="panel chart-panel">
+                            <div class="panel-title-row">
+                                <h3>Workspace Composition</h3>
+                                <span class="mini-badge">Roles and activity</span>
+                            </div>
+                            <div id="teamChart" class="bar-chart">
+                                <p class="empty-state">Load workspace data to see team distribution.</p>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            <section id="authentication" class="content-section">
+                <div class="section-header">
+                    <div>
+                        <p class="section-kicker">Identity</p>
+                        <h2>Authentication</h2>
+                    </div>
+                    <span class="status-badge" id="sessionBadge">Awaiting sign-in</span>
+                </div>
+
+                <div class="two-column-grid">
+                    <form id="registerForm" class="panel form-panel">
+                        <div class="panel-title-row">
+                            <h3>Register Organization</h3>
+                            <span class="mini-badge">Admin bootstrap</span>
+                        </div>
+                        <label>Organization Name<input name="organizationName" value="Acme Studio" required></label>
+                        <label>Workspace Slug<input name="organizationSlug" value="acme-studio" required></label>
+                        <label>Admin Full Name<input name="adminFullName" value="Ada Lovelace" required></label>
+                        <label>Admin Email<input name="adminEmail" value="ada@acme.com" type="email" required></label>
+                        <label>Password<input name="password" value="Password123!" type="password" required></label>
+                        <button type="submit">Register and Sign In</button>
+                    </form>
+
+                    <form id="loginForm" class="panel form-panel">
+                        <div class="panel-title-row">
+                            <h3>Login</h3>
+                            <span class="mini-badge">JWT session</span>
+                        </div>
+                        <label>Email<input name="email" value="ada@acme.com" type="email" required></label>
+                        <label>Password<input name="password" value="Password123!" type="password" required></label>
+                        <button type="submit">Login</button>
+
+                        <div class="token-box">
+                            <label>JWT Token<textarea id="jwtToken" readonly placeholder="JWT token appears here after login"></textarea></label>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <section id="workspace" class="content-section">
+                <div class="section-header">
+                    <div>
+                        <p class="section-kicker">Tenant Workspace</p>
+                        <h2>Organization snapshot</h2>
+                    </div>
+                    <button id="loadWorkspaceBtn" class="secondary-btn" type="button">Refresh Workspace</button>
+                </div>
+
+                <div class="three-column-grid">
+                    <article class="panel data-panel">
+                        <div class="panel-title-row">
+                            <h3>Organization</h3>
+                            <span class="mini-badge">Tenant profile</span>
+                        </div>
+                        <pre id="organizationOutput">Sign in to load organization details.</pre>
+                    </article>
+                    <article class="panel data-panel">
+                        <div class="panel-title-row">
+                            <h3>Users</h3>
+                            <span class="mini-badge">Access roles</span>
+                        </div>
+                        <pre id="usersOutput">No data loaded.</pre>
+                    </article>
+                    <article class="panel data-panel">
+                        <div class="panel-title-row">
+                            <h3>Activity Logs</h3>
+                            <span class="mini-badge">Audit trail</span>
+                        </div>
+                        <pre id="logsOutput">No data loaded.</pre>
+                    </article>
+                </div>
+            </section>
+
+            <section id="delivery" class="content-section">
+                <div class="section-header">
+                    <div>
+                        <p class="section-kicker">Delivery</p>
+                        <h2>Projects and tasks</h2>
+                    </div>
+                    <button id="loadProjectsBtn" class="secondary-btn" type="button">Refresh Projects</button>
+                </div>
+
+                <div class="two-column-grid">
+                    <form id="projectForm" class="panel form-panel">
+                        <div class="panel-title-row">
+                            <h3>Create Project</h3>
+                            <span class="mini-badge">Planning</span>
+                        </div>
+                        <label>Name<input name="name" value="Tenant Onboarding" required></label>
+                        <label>Description<textarea name="description">Create the first customer onboarding workflow.</textarea></label>
+                        <label>Status
+                            <select name="status">
+                                <option value="1">Planned</option>
+                                <option value="2">Active</option>
+                                <option value="3">Completed</option>
+                                <option value="4">Archived</option>
+                            </select>
+                        </label>
+                        <label>Start Date<input name="startDateUtc" type="date"></label>
+                        <label>Due Date<input name="dueDateUtc" type="date"></label>
+                        <button type="submit">Create Project</button>
+                    </form>
+
+                    <form id="taskForm" class="panel form-panel">
+                        <div class="panel-title-row">
+                            <h3>Create Task</h3>
+                            <span class="mini-badge">Execution</span>
+                        </div>
+                        <label>Project
+                            <select id="projectSelect" name="projectId" required>
+                                <option value="">Load projects first</option>
+                            </select>
+                        </label>
+                        <label>Title<input name="title" value="Define workspace permissions" required></label>
+                        <label>Description<textarea name="description">Set up Admin, Manager, and Member task flows.</textarea></label>
+                        <label>Assign Member
+                            <select id="taskAssigneeSelect" name="assignedToUserId">
+                                <option value="">Unassigned</option>
+                            </select>
+                        </label>
+                        <label>Priority
+                            <select name="priority">
+                                <option value="1">Low</option>
+                                <option value="2" selected>Medium</option>
+                                <option value="3">High</option>
+                                <option value="4">Critical</option>
+                            </select>
+                        </label>
+                        <label>Due Date<input name="dueDateUtc" type="date"></label>
+                        <button type="submit">Create Task</button>
+                    </form>
+                </div>
+
+                <div class="project-layout">
+                    <article class="panel data-panel">
+                        <div class="panel-title-row">
+                            <h3>Project Directory</h3>
+                            <span class="mini-badge">Select project</span>
+                        </div>
+                        <div id="projectCards" class="project-card-list">
+                            <p class="empty-state">No projects loaded.</p>
+                        </div>
+                    </article>
+
+                    <article class="panel data-panel project-details-panel">
+                        <div class="panel-title-row">
+                            <h3>Project Details</h3>
+                            <span class="mini-badge">Delivery snapshot</span>
+                        </div>
+
+                        <div id="projectDetailsEmpty" class="empty-state">
+                            Select a project to view details and task execution status.
+                        </div>
+
+                        <div id="projectDetailsContent" class="project-details-content hidden">
+                            <div class="project-overview-header">
+                                <div>
+                                    <p class="section-kicker">Selected Project</p>
+                                    <h3 id="selectedProjectName">Project name</h3>
+                                    <p id="selectedProjectDescription" class="project-description">Description</p>
+                                </div>
+                                <span id="selectedProjectStatus" class="project-status-chip">Planned</span>
+                            </div>
+
+                            <div class="project-metric-grid">
+                                <article class="mini-metric">
+                                    <span class="metric-label">Start</span>
+                                    <strong id="selectedProjectStart">-</strong>
+                                </article>
+                                <article class="mini-metric">
+                                    <span class="metric-label">Due</span>
+                                    <strong id="selectedProjectDue">-</strong>
+                                </article>
+                                <article class="mini-metric">
+                                    <span class="metric-label">Tasks</span>
+                                    <strong id="selectedProjectTaskCount">0</strong>
+                                </article>
+                                <article class="mini-metric">
+                                    <span class="metric-label">Completed</span>
+                                    <strong id="selectedProjectCompleted">0</strong>
+                                </article>
+                            </div>
+
+                            <div class="task-table-wrap">
+                                <table class="task-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Task</th>
+                                            <th>Status</th>
+                                            <th>Assignee</th>
+                                            <th>Due</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="projectTasksTableBody">
+                                        <tr>
+                                            <td colspan="4">No tasks available.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <article class="panel data-panel wide-panel">
+                    <div class="panel-title-row">
+                        <h3>Projects API Payload</h3>
+                        <span class="mini-badge">Raw data</span>
+                    </div>
+                    <pre id="projectsOutput">No projects loaded.</pre>
+                </article>
+            </section>
+
+            <section id="console" class="content-section">
+                <div class="section-header">
+                    <div>
+                        <p class="section-kicker">Diagnostics</p>
+                        <h2>Request console</h2>
+                    </div>
+                </div>
+                <article class="panel data-panel">
+                    <div class="panel-title-row">
+                        <h3>Latest response</h3>
+                        <span class="mini-badge">API output</span>
+                    </div>
+                    <pre id="responseOutput">Ready.</pre>
+                </article>
+            </section>
+        </main>
+    </div>
+
+    <script src="/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+**/bin/
+**/obj/
+**/.vs/
+**/.vscode/
+**/TestResults/
+**/Logs/
+.git/
+.gitignore
+README.md
+build.log

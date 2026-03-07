@@ -1,0 +1,14 @@
+E:\Dot net app\src\ProjectManagementSaaS.Domain\obj\Debug\net9.0\ProjectManagementSaaS.Domain.GeneratedMSBuildEditorConfig.editorconfig
+E:\Dot net app\src\ProjectManagementSaaS.Domain\obj\Debug\net9.0\ProjectManagementSaaS.Domain.AssemblyInfoInputs.cache
+E:\Dot net app\src\ProjectManagementSaaS.Domain\obj\Debug\net9.0\ProjectManagementSaaS.Domain.AssemblyInfo.cs
+E:\Dot net app\src\ProjectManagementSaaS.Domain\obj\Debug\net9.0\ProjectManagementSaaS.Domain.csproj.CoreCompileInputs.cache
+E:\Dot net app\src\ProjectManagementSaaS.Domain\bin\Debug\net9.0\ProjectManagementSaaS.Domain.deps.json
+E:\Dot net app\src\ProjectManagementSaaS.Domain\bin\Debug\net9.0\ProjectManagementSaaS.Domain.dll
+E:\Dot net app\src\ProjectManagementSaaS.Domain\bin\Debug\net9.0\ProjectManagementSaaS.Domain.pdb
+E:\Dot net app\src\ProjectManagementSaaS.Domain\obj\Debug\net9.0\ProjectManagementSaaS.Domain.dll
+E:\Dot net app\src\ProjectManagementSaaS.Domain\obj\Debug\net9.0\refint\ProjectManagementSaaS.Domain.dll
+E:\Dot net app\src\ProjectManagementSaaS.Domain\obj\Debug\net9.0\ProjectManagementSaaS.Domain.pdb
+E:\Dot net app\src\ProjectManagementSaaS.Domain\obj\Debug\net9.0\ref\ProjectManagementSaaS.Domain.dll
+E:\Dot net app\.artifacts\api-verify\ProjectManagementSaaS.Domain.deps.json
+E:\Dot net app\.artifacts\api-verify\ProjectManagementSaaS.Domain.dll
+E:\Dot net app\.artifacts\api-verify\ProjectManagementSaaS.Domain.pdb
