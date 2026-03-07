@@ -1985,31 +1985,31 @@
           }
         }
       },
-      "ProjectManagementSaaS.Application/1.0.0": {
+      "MultiTenantWorkspace.Application/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.9",
-          "ProjectManagementSaaS.Domain": "1.0.0"
+          "MultiTenantWorkspace.Domain": "1.0.0"
         },
         "compile": {
-          "bin/placeholder/ProjectManagementSaaS.Application.dll": {}
+          "bin/placeholder/MultiTenantWorkspace.Application.dll": {}
         },
         "runtime": {
-          "bin/placeholder/ProjectManagementSaaS.Application.dll": {}
+          "bin/placeholder/MultiTenantWorkspace.Application.dll": {}
         }
       },
-      "ProjectManagementSaaS.Domain/1.0.0": {
+      "MultiTenantWorkspace.Domain/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "compile": {
-          "bin/placeholder/ProjectManagementSaaS.Domain.dll": {}
+          "bin/placeholder/MultiTenantWorkspace.Domain.dll": {}
         },
         "runtime": {
-          "bin/placeholder/ProjectManagementSaaS.Domain.dll": {}
+          "bin/placeholder/MultiTenantWorkspace.Domain.dll": {}
         }
       },
-      "ProjectManagementSaaS.Infrastructure/1.0.0": {
+      "MultiTenantWorkspace.Infrastructure/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
@@ -2017,14 +2017,14 @@
           "Microsoft.EntityFrameworkCore.SqlServer": "9.0.9",
           "Microsoft.Extensions.Caching.Memory": "9.0.9",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "9.0.9",
-          "ProjectManagementSaaS.Application": "1.0.0",
-          "ProjectManagementSaaS.Domain": "1.0.0"
+          "MultiTenantWorkspace.Application": "1.0.0",
+          "MultiTenantWorkspace.Domain": "1.0.0"
         },
         "compile": {
-          "bin/placeholder/ProjectManagementSaaS.Infrastructure.dll": {}
+          "bin/placeholder/MultiTenantWorkspace.Infrastructure.dll": {}
         },
         "runtime": {
-          "bin/placeholder/ProjectManagementSaaS.Infrastructure.dll": {}
+          "bin/placeholder/MultiTenantWorkspace.Infrastructure.dll": {}
         }
       }
     }
@@ -5655,20 +5655,20 @@
         "useSharedDesignerContext.txt"
       ]
     },
-    "ProjectManagementSaaS.Application/1.0.0": {
+    "MultiTenantWorkspace.Application/1.0.0": {
       "type": "project",
-      "path": "../ProjectManagementSaaS.Application/ProjectManagementSaaS.Application.csproj",
-      "msbuildProject": "../ProjectManagementSaaS.Application/ProjectManagementSaaS.Application.csproj"
+      "path": "../MultiTenantWorkspace.Application/MultiTenantWorkspace.Application.csproj",
+      "msbuildProject": "../MultiTenantWorkspace.Application/MultiTenantWorkspace.Application.csproj"
     },
-    "ProjectManagementSaaS.Domain/1.0.0": {
+    "MultiTenantWorkspace.Domain/1.0.0": {
       "type": "project",
-      "path": "../ProjectManagementSaaS.Domain/ProjectManagementSaaS.Domain.csproj",
-      "msbuildProject": "../ProjectManagementSaaS.Domain/ProjectManagementSaaS.Domain.csproj"
+      "path": "../MultiTenantWorkspace.Domain/MultiTenantWorkspace.Domain.csproj",
+      "msbuildProject": "../MultiTenantWorkspace.Domain/MultiTenantWorkspace.Domain.csproj"
     },
-    "ProjectManagementSaaS.Infrastructure/1.0.0": {
+    "MultiTenantWorkspace.Infrastructure/1.0.0": {
       "type": "project",
-      "path": "../ProjectManagementSaaS.Infrastructure/ProjectManagementSaaS.Infrastructure.csproj",
-      "msbuildProject": "../ProjectManagementSaaS.Infrastructure/ProjectManagementSaaS.Infrastructure.csproj"
+      "path": "../MultiTenantWorkspace.Infrastructure/MultiTenantWorkspace.Infrastructure.csproj",
+      "msbuildProject": "../MultiTenantWorkspace.Infrastructure/MultiTenantWorkspace.Infrastructure.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -5677,8 +5677,8 @@
       "Asp.Versioning.Mvc.ApiExplorer >= 8.1.0",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 9.0.9",
       "Microsoft.EntityFrameworkCore.Design >= 9.0.9",
-      "ProjectManagementSaaS.Application >= 1.0.0",
-      "ProjectManagementSaaS.Infrastructure >= 1.0.0",
+      "MultiTenantWorkspace.Application >= 1.0.0",
+      "MultiTenantWorkspace.Infrastructure >= 1.0.0",
       "Serilog.AspNetCore >= 9.0.0",
       "Serilog.Settings.Configuration >= 9.0.0",
       "Serilog.Sinks.Console >= 6.0.0",
@@ -5718,11 +5718,11 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "E:\\Dot net app\\src\\ProjectManagementSaaS.Application\\ProjectManagementSaaS.Application.csproj": {
-              "projectPath": "E:\\Dot net app\\src\\ProjectManagementSaaS.Application\\ProjectManagementSaaS.Application.csproj"
+            "E:\\Dot net app\\src\\MultiTenantWorkspace.Application\\MultiTenantWorkspace.Application.csproj": {
+              "projectPath": "E:\\Dot net app\\src\\MultiTenantWorkspace.Application\\MultiTenantWorkspace.Application.csproj"
             },
-            "E:\\Dot net app\\src\\ProjectManagementSaaS.Infrastructure\\ProjectManagementSaaS.Infrastructure.csproj": {
-              "projectPath": "E:\\Dot net app\\src\\ProjectManagementSaaS.Infrastructure\\ProjectManagementSaaS.Infrastructure.csproj"
+            "E:\\Dot net app\\src\\MultiTenantWorkspace.Infrastructure\\MultiTenantWorkspace.Infrastructure.csproj": {
+              "projectPath": "E:\\Dot net app\\src\\MultiTenantWorkspace.Infrastructure\\MultiTenantWorkspace.Infrastructure.csproj"
             }
           }
         }

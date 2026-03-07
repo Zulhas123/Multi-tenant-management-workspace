@@ -24,7 +24,9 @@ The backend follows Clean Architecture and is split into:
 - Role-based authorization with `Admin`, `Manager`, and `Member`
 - Organization workspace isolation
 - Project creation and listing
-- Task creation and task status updates
+- Project editing and deletion
+- Task creation, editing, and deletion
+- Task status updates
 - Task comments
 - Activity log tracking
 - Global exception handling middleware
@@ -108,19 +110,66 @@ Activity is logged for:
 ## Project Structure
 
 ```text
-ProjectManagementSaaS.sln
+MultiTenantWorkspace.sln
 src/
-  ProjectManagementSaaS.Domain/
-  ProjectManagementSaaS.Application/
-  ProjectManagementSaaS.Infrastructure/
-  ProjectManagementSaaS.Api/
+  MultiTenantWorkspace.Domain/
+    Common/
+    Entities/
+    Enums/
+    ValueObjects/
+    Events/
+    Interfaces/
+  MultiTenantWorkspace.Application/
+    Common/
+    Features/
+      Authentication/
+        Commands/
+        DTOs/
+        Interfaces/
+        Services/
+      Workspaces/
+        DTOs/
+        Interfaces/
+        Services/
+      Projects/
+        Commands/
+        DTOs/
+        Interfaces/
+        Services/
+      Tasks/
+        Commands/
+        DTOs/
+        Interfaces/
+        Services/
+    DTOs/
+    Interfaces/
+    Validators/
+  MultiTenantWorkspace.Infrastructure/
+    Caching/
+    Persistence/
+      Configurations/
+      Seed/
+      Migrations/
+    Repositories/
+    Identity/
+    Services/
+    DependencyInjection/
+  MultiTenantWorkspace.Web/
+    Controllers/
+    Views/
+    ViewModels/
+    Middleware/
+    Filters/
+    Extensions/
+    wwwroot/
 tests/
-  ProjectManagementSaaS.Application.Tests/
+  MultiTenantWorkspace.Application.Tests/
+  MultiTenantWorkspace.Infrastructure.Tests/
 ```
 
 ## Important Files
 
-- `src/ProjectManagementSaaS.Api/Program.cs`
+- `src/MultiTenantWorkspace.Web/Program.cs`
   - application startup
   - dependency injection
   - JWT configuration
@@ -128,25 +177,25 @@ tests/
   - static UI hosting
   - database creation on startup
 
-- `src/ProjectManagementSaaS.Api/wwwroot/index.html`
+- `src/MultiTenantWorkspace.Web/wwwroot/index.html`
   - built-in operations console UI
 
-- `src/ProjectManagementSaaS.Api/wwwroot/styles.css`
+- `src/MultiTenantWorkspace.Web/wwwroot/css/styles.css`
   - layout, top bar, left sidebar, responsive styling
 
-- `src/ProjectManagementSaaS.Api/wwwroot/app.js`
+- `src/MultiTenantWorkspace.Web/wwwroot/js/app.js`
   - frontend behavior and API requests
 
-- `src/ProjectManagementSaaS.Infrastructure/Persistence/ApplicationDbContext.cs`
+- `src/MultiTenantWorkspace.Infrastructure/Persistence/ApplicationDbContext.cs`
   - EF Core entity mapping
 
-- `src/ProjectManagementSaaS.Application/Auth/AuthService.cs`
+- `src/MultiTenantWorkspace.Application/Features/Authentication/Services/AuthService.cs`
   - registration and login logic
 
-- `src/ProjectManagementSaaS.Application/Projects/ProjectService.cs`
+- `src/MultiTenantWorkspace.Application/Features/Projects/Services/ProjectService.cs`
   - project creation and listing
 
-- `src/ProjectManagementSaaS.Application/Tasks/TaskService.cs`
+- `src/MultiTenantWorkspace.Application/Features/Tasks/Services/TaskService.cs`
   - task creation, status updates, comments
 
 ## Technology Stack
@@ -233,10 +282,15 @@ Base version: `/api/v1`
 
 - `GET /api/v1/projects`
 - `POST /api/v1/projects`
+- `PUT /api/v1/projects/{projectId}`
+- `DELETE /api/v1/projects/{projectId}`
 
 ### Tasks
 
+- `GET /api/v1/tasks/{taskId}`
 - `POST /api/v1/tasks`
+- `PUT /api/v1/tasks/{taskId}`
+- `DELETE /api/v1/tasks/{taskId}`
 - `PATCH /api/v1/tasks/{taskId}/status`
 - `POST /api/v1/tasks/{taskId}/comments`
 
@@ -245,12 +299,12 @@ Base version: `/api/v1`
 Default connection string:
 
 ```json
-"DefaultConnection": "Server=(localdb)\\MSSQLLocalDB;Database=ProjectManagementSaaSDb;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True"
+"DefaultConnection": "Server=DESKTOP-2DOKIE3\\SQLEXPRESS;Database=ProjectManagementSaaSDb;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True;Encrypt=False"
 ```
 
 Current behavior:
 
-- the app uses SQL Server LocalDB by default
+- the app is configured for the local SQL Server instance `DESKTOP-2DOKIE3\\SQLEXPRESS`
 - the schema is created automatically on startup with `Database.EnsureCreated()`
 - EF migrations are configured in the solution but an initial migration has not yet been generated
 
@@ -264,7 +318,7 @@ Current behavior:
 ### Run the API and UI
 
 ```powershell
-dotnet run --project src/ProjectManagementSaaS.Api
+dotnet run --project src/MultiTenantWorkspace.Web
 ```
 
 Default URLs from launch settings:
@@ -333,13 +387,13 @@ Seeded content includes:
 ### Build the Solution
 
 ```powershell
-dotnet build ProjectManagementSaaS.sln
+dotnet build MultiTenantWorkspace.sln
 ```
 
 ### Run Tests
 
 ```powershell
-dotnet test ProjectManagementSaaS.sln --no-build
+dotnet test MultiTenantWorkspace.sln --no-build
 ```
 
 ## GitHub Actions
@@ -406,8 +460,7 @@ Included tests cover application-layer behavior for:
 - Add EF Core migrations
 - Add seed/demo data
 - Add project details page and task tables/cards
-- Add member assignment dropdown in UI
-- Add dashboard charts and KPIs
+- Add richer user management screens
 - Add Serilog or structured logging
 - Add Docker support
 - Add GitHub Actions pipeline

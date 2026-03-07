@@ -4,6 +4,7 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UseAppHost>false</UseAppHost>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,8 +23,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ProjectManagementSaaS.Application\ProjectManagementSaaS.Application.csproj" />
-    <ProjectReference Include="..\ProjectManagementSaaS.Infrastructure\ProjectManagementSaaS.Infrastructure.csproj" />
+    <ProjectReference Include="..\MultiTenantWorkspace.Application\MultiTenantWorkspace.Application.csproj" />
+    <ProjectReference Include="..\MultiTenantWorkspace.Infrastructure\MultiTenantWorkspace.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

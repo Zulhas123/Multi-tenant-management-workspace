@@ -23,13 +23,13 @@ jobs:
           dotnet-version: 9.0.x
 
       - name: Restore dependencies
-        run: dotnet restore ProjectManagementSaaS.sln
+        run: dotnet restore MultiTenantWorkspace.sln
 
       - name: Build solution
-        run: dotnet build ProjectManagementSaaS.sln --configuration Release --no-restore
+        run: dotnet build MultiTenantWorkspace.sln --configuration Release --no-restore
 
       - name: Run tests
-        run: dotnet test ProjectManagementSaaS.sln --configuration Release --no-build --logger "trx;LogFileName=test-results.trx"
+        run: dotnet test MultiTenantWorkspace.sln --configuration Release --no-build --logger "trx;LogFileName=test-results.trx"
 
       - name: Upload test results
         if: always()

@@ -392,6 +392,108 @@
                                     </tbody>
                                 </table>
                             </div>
+
+                            <div class="detail-management-grid">
+                                <form id="projectEditForm" class="panel form-panel embedded-form">
+                                    <div class="panel-title-row">
+                                        <h3>Edit Selected Project</h3>
+                                        <span class="mini-badge">Update or delete</span>
+                                    </div>
+                                    <label>Name<input name="name" required></label>
+                                    <label>Description<textarea name="description"></textarea></label>
+                                    <label>Status
+                                        <select name="status">
+                                            <option value="1">Planned</option>
+                                            <option value="2">Active</option>
+                                            <option value="3">Completed</option>
+                                            <option value="4">Archived</option>
+                                        </select>
+                                    </label>
+                                    <label>Start Date<input name="startDateUtc" type="date"></label>
+                                    <label>Due Date<input name="dueDateUtc" type="date"></label>
+                                    <div class="inline-actions">
+                                        <button type="submit">Update Project</button>
+                                        <button id="deleteProjectBtn" class="secondary-btn" type="button">Delete Project</button>
+                                    </div>
+                                </form>
+
+                                <article class="panel data-panel task-inspector">
+                                    <div class="panel-title-row">
+                                        <h3>Selected Task</h3>
+                                        <span class="mini-badge">Manage execution</span>
+                                    </div>
+
+                                    <div id="taskDetailsEmpty" class="empty-state">
+                                        Select a task from the table to update it, add comments, or delete it.
+                                    </div>
+
+                                    <div id="taskDetailsContent" class="task-details-content hidden">
+                                        <div class="task-summary-card">
+                                            <div>
+                                                <p class="section-kicker">Task Inspector</p>
+                                                <h3 id="selectedTaskTitle">Task title</h3>
+                                                <p id="selectedTaskMeta" class="project-description">Task metadata</p>
+                                            </div>
+                                            <span id="selectedTaskStatus" class="task-status-chip status-todo">Todo</span>
+                                        </div>
+
+                                        <form id="taskEditForm" class="form-panel compact-form">
+                                            <label>Project
+                                                <select id="taskEditProjectSelect" name="projectId" required>
+                                                    <option value="">Load projects first</option>
+                                                </select>
+                                            </label>
+                                            <label>Title<input name="title" required></label>
+                                            <label>Description<textarea name="description"></textarea></label>
+                                            <label>Assign Member
+                                                <select id="taskEditAssigneeSelect" name="assignedToUserId">
+                                                    <option value="">Unassigned</option>
+                                                </select>
+                                            </label>
+                                            <label>Priority
+                                                <select name="priority">
+                                                    <option value="1">Low</option>
+                                                    <option value="2">Medium</option>
+                                                    <option value="3">High</option>
+                                                    <option value="4">Critical</option>
+                                                </select>
+                                            </label>
+                                            <label>Status
+                                                <select name="status">
+                                                    <option value="1">Todo</option>
+                                                    <option value="2">In Progress</option>
+                                                    <option value="3">Done</option>
+                                                    <option value="4">Blocked</option>
+                                                </select>
+                                            </label>
+                                            <label>Due Date<input name="dueDateUtc" type="date"></label>
+                                            <div class="inline-actions">
+                                                <button type="submit">Update Task</button>
+                                                <button id="deleteTaskBtn" class="secondary-btn" type="button">Delete Task</button>
+                                            </div>
+                                        </form>
+
+                                        <form id="taskCommentForm" class="form-panel compact-form">
+                                            <div class="panel-title-row">
+                                                <h3>Add Comment</h3>
+                                                <span class="mini-badge">Collaboration</span>
+                                            </div>
+                                            <label>Comment<textarea name="content" placeholder="Add a task update or note." required></textarea></label>
+                                            <button type="submit">Add Comment</button>
+                                        </form>
+
+                                        <div>
+                                            <div class="panel-title-row">
+                                                <h3>Comment History</h3>
+                                                <span class="mini-badge">Task timeline</span>
+                                            </div>
+                                            <div id="taskCommentsList" class="comment-list">
+                                                <p class="empty-state">No comments available.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </article>
+                            </div>
                         </div>
                     </article>
                 </div>
