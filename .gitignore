@@ -1,0 +1,39 @@
+﻿
+# .NET / Visual Studio
+.dotnet/
+.vs/
+
+# Build outputs
+**/[Bb]in/
+**/[Oo]bj/
+**/[Aa]rtifacts/
+.artifacts/
+
+# Test / coverage
+TestResults/
+**/TestResults/
+coverage/
+**/coverage/
+
+# NuGet
+**/packages/
+*.nupkg
+*.snupkg
+
+# IDE / user-specific files
+*.user
+*.rsuser
+*.suo
+*.userosscache
+*.sln.docstates
+.idea/
+.vscode/
+
+# Logs
+*.log
+
+# OS cruft
+Thumbs.db
+Desktop.ini
+.DS_Store
+
