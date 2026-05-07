@@ -1,278 +1,120 @@
-# ProjectManagementSaaS
+# Multi-tenant Management Workspace
 
-Multi-tenant SaaS Project Management System built with ASP.NET Core Web API, Clean Architecture, SQL Server, Entity Framework Core, and JWT authentication.
+A production-oriented **multi-tenant project management** backend built with **ASP.NET Core Web API** and **Clean Architecture**, with a **minimal, professional operations console UI** served directly from the API (plain HTML/CSS/JS).
 
-This project demonstrates a professional backend structure with a built-in presentation layer. Organizations can register their own workspace, authenticate with JWT, create projects, create tasks, and inspect activity logs from a browser-based operations console served directly by the API.
+This repository is designed to be:
 
-## Application Description
+- **Clean and testable** (clear boundaries, dependency inversion, unit tests)
+- **Lightweight** (only essential services/libraries; generated artifacts are not committed)
+- **Usable by default** (Swagger + built-in UI for demo/manual testing)
+- **Multi-tenant by design** (tenant scoping enforced across layers)
 
-The application is designed as a multi-tenant project management platform where each organization works inside its own isolated workspace. Users belong to one organization, and all project, task, and activity data is scoped to that tenant.
+---
 
-The backend follows Clean Architecture and is split into:
+## Architecture (Clean Architecture)
 
-- `Domain`: core entities, enums, and business model
-- `Application`: use cases, service contracts, business rules, and abstractions
-- `Infrastructure`: EF Core persistence, repositories, caching, password hashing, JWT generation
-- `Api`: controllers, middleware, authentication setup, Swagger, and built-in UI
+The solution is intentionally structured around strict separation of concerns:
 
-## Main Features
+- **Domain (`src/MultiTenantWorkspace.Domain`)**
+  - Entities, enums, and core business rules
+  - No external dependencies
+- **Application (`src/MultiTenantWorkspace.Application`)**
+  - Use cases, DTOs, and interfaces (ports)
+  - Cross-cutting abstractions (current user, date/time, unit of work)
+- **Infrastructure (`src/MultiTenantWorkspace.Infrastructure`)**
+  - SQL Server persistence (EF Core), repositories, caching, identity utilities
+  - Implements Application interfaces
+- **Web host (`src/MultiTenantWorkspace.Web`)**
+  - HTTP endpoints (controllers), middleware, authentication wiring, Swagger
+  - Serves the static operations console from `wwwroot/`
 
-- Multi-tenant organization registration
-- JWT-based authentication
-- Refresh token rotation
-- Logout-based refresh token invalidation
-- Role-based authorization with `Admin`, `Manager`, and `Member`
-- Organization workspace isolation
-- Project creation and listing
-- Project editing and deletion
-- Task creation, editing, and deletion
-- Task status updates
-- Task comments
-- Activity log tracking
-- Global exception handling middleware
-- In-memory caching for project lists
-- API versioning
-- Swagger/OpenAPI support
-- Built-in browser UI with top navigation and left sidebar layout
-- SQL Server persistence using Entity Framework Core
+**Dependency direction**
 
-## Roles and Permissions
+`Web` → `Application` → `Domain`  
+`Infrastructure` → `Application` → `Domain`
 
-- `Admin`
-  - Register organization
-  - Login
-  - View organization details
-  - View users
-  - View activity logs
-  - Create projects
-  - Create tasks
-  - Update task status
-  - Add comments
+The Domain never references other layers.
 
-- `Manager`
-  - Login
-  - View organization details
-  - View users
-  - View activity logs
-  - Create projects
-  - Create tasks
-  - Update task status
-  - Add comments
+---
 
-- `Member`
-  - Login
-  - View organization details
-  - View activity logs
-  - Update status only for tasks assigned to them
-  - Add comments
+## Built-in UI (Minimal, Professional Console)
 
-## Implemented Functional Areas
+The API serves a minimal operations console intended for **clarity, usability, and consistency**:
 
-### 1. Authentication
+- Clean top bar + sidebar navigation
+- Dashboard + workflow-driven panels (auth, workspace, projects/tasks)
+- Responsive layout and consistent component patterns (cards, panels, tables)
+- Hash navigation (e.g. `#overview`) to ensure sections load reliably
 
-- Register a new organization and bootstrap the first admin user
-- Login with email and password
-- Issue JWT token with:
-  - user id
-  - organization id
-  - email
-  - role
+UI source:
 
-### 2. Organization Management
+- `src/MultiTenantWorkspace.Web/wwwroot/index.html`
+- `src/MultiTenantWorkspace.Web/wwwroot/css/styles.css`
+- `src/MultiTenantWorkspace.Web/wwwroot/js/app.js`
 
-- Get current organization details
-- Get organization users
-- Get organization activity logs
+---
 
-### 3. Project Management
-
-- Create a new project
-- List projects for the current organization
-- Cache project list results for faster repeated access
-
-### 4. Task Management
-
-- Create task under a project
-- Assign task to a user
-- Update task status
-- Add comments to tasks
-
-### 5. Activity Logging
-
-Activity is logged for:
-
-- organization registration
-- project creation
-- task creation
-- task status changes
-- task comment creation
-
-## Project Structure
+## Repository Structure
 
 ```text
 MultiTenantWorkspace.sln
 src/
   MultiTenantWorkspace.Domain/
-    Common/
-    Entities/
-    Enums/
-    ValueObjects/
-    Events/
-    Interfaces/
   MultiTenantWorkspace.Application/
-    Common/
-    Features/
-      Authentication/
-        Commands/
-        DTOs/
-        Interfaces/
-        Services/
-      Workspaces/
-        DTOs/
-        Interfaces/
-        Services/
-      Projects/
-        Commands/
-        DTOs/
-        Interfaces/
-        Services/
-      Tasks/
-        Commands/
-        DTOs/
-        Interfaces/
-        Services/
-    DTOs/
-    Interfaces/
-    Validators/
   MultiTenantWorkspace.Infrastructure/
-    Caching/
-    Persistence/
-      Configurations/
-      Seed/
-      Migrations/
-    Repositories/
-    Identity/
-    Services/
-    DependencyInjection/
+  MultiTenantWorkspace.Shared/
   MultiTenantWorkspace.Web/
-    Controllers/
-    Views/
-    ViewModels/
-    Middleware/
-    Filters/
-    Extensions/
-    wwwroot/
+  ProjectManagementSaaS.Api/        # Legacy/alternate host (not in the solution)
 tests/
   MultiTenantWorkspace.Application.Tests/
   MultiTenantWorkspace.Infrastructure.Tests/
 ```
 
-## Important Files
+---
 
-- `src/MultiTenantWorkspace.Web/Program.cs`
-  - application startup
-  - dependency injection
-  - JWT configuration
-  - Swagger setup
-  - static UI hosting
-  - database creation on startup
+## Key Features
 
-- `src/MultiTenantWorkspace.Web/wwwroot/index.html`
-  - built-in operations console UI
+- Multi-tenant organization registration (tenant + bootstrap user)
+- JWT authentication + refresh token flow
+- Role-based authorization (`Admin`, `Manager`, `Member`)
+- Tenant isolation (organization-scoped access)
+- Projects
+  - Create/list/update/delete
+- Tasks
+  - Create/update/delete
+  - Status updates
+  - Comments
+- Activity logging for tenant operations
+- API versioning (`/api/v1/...`)
+- Swagger/OpenAPI
+- Built-in operations console UI for manual testing/demo
 
-- `src/MultiTenantWorkspace.Web/wwwroot/css/styles.css`
-  - layout, top bar, left sidebar, responsive styling
+---
 
-- `src/MultiTenantWorkspace.Web/wwwroot/js/app.js`
-  - frontend behavior and API requests
+## Application Flow (End-to-end)
 
-- `src/MultiTenantWorkspace.Infrastructure/Persistence/ApplicationDbContext.cs`
-  - EF Core entity mapping
+1. **Register an organization** → creates tenant + bootstrap admin
+2. **Login** → returns JWT + refresh token
+3. **Use JWT** in `Authorization: Bearer <token>`
+4. **Load workspace** (organization details/users/activity logs)
+5. **Create projects**
+6. **Create tasks under projects**
+7. **Update task status / add comments** → activity logs are recorded
 
-- `src/MultiTenantWorkspace.Application/Features/Authentication/Services/AuthService.cs`
-  - registration and login logic
+The built-in UI mirrors this flow to validate the API quickly without external tools.
 
-- `src/MultiTenantWorkspace.Application/Features/Projects/Services/ProjectService.cs`
-  - project creation and listing
+---
 
-- `src/MultiTenantWorkspace.Application/Features/Tasks/Services/TaskService.cs`
-  - task creation, status updates, comments
+## API Surface (v1)
 
-## Technology Stack
+### Authentication
 
-- .NET 9
-- ASP.NET Core Web API
-- Entity Framework Core
-- SQL Server / LocalDB
-- JWT Bearer Authentication
-- BCrypt password hashing
-- Swagger / OpenAPI
-- API Versioning
-- xUnit for tests
-- HTML, CSS, JavaScript for the built-in UI
-
-## How the Application Works
-
-### Registration Flow
-
-1. A user registers a new organization.
-2. The system creates the organization record.
-3. The system creates the first admin user for that organization.
-4. The password is hashed using BCrypt.
-5. A JWT token is generated and returned.
-6. An activity log entry is created.
-
-### Login Flow
-
-1. User enters email and password.
-2. The system validates the credentials.
-3. The password is checked against the stored hash.
-4. A JWT token is generated and returned.
-5. The token is used to access protected endpoints.
-
-### Refresh Token Flow
-
-1. Login or registration returns both an access token and a refresh token.
-2. The refresh token is stored server-side as a hash.
-3. When the access token expires, the client can call the refresh endpoint.
-4. The existing refresh token is revoked and rotated.
-5. A new access token and refresh token are returned.
-
-### Logout Flow
-
-1. The client sends the current refresh token to the logout endpoint.
-2. The server revokes that refresh token.
-3. The browser clears the local session state.
-4. The revoked refresh token can no longer be used.
-
-### Multi-Tenant Data Flow
-
-1. The JWT includes the `organizationId`.
-2. The current user context is read from claims.
-3. Application services use that tenant id to scope data access.
-4. Users only see data from their own organization.
-
-### Built-in UI Flow
-
-1. Start the API project.
-2. Open the browser.
-3. Use the Authentication section to register or login.
-4. Use the Workspace section to load organization details.
-5. Use the Projects and Tasks section to create project/task data.
-6. Use the Request Console to inspect the latest API response.
-
-## API Endpoints
-
-Base version: `/api/v1`
-
-### Auth
-
-- `POST /api/v1/auth/register`
+- `POST /api/v1/auth/register-organization`
 - `POST /api/v1/auth/login`
 - `POST /api/v1/auth/refresh`
 - `POST /api/v1/auth/logout`
 
-### Organization
+### Workspace (Organization)
 
 - `GET /api/v1/organization`
 - `GET /api/v1/organization/users`
@@ -294,188 +136,120 @@ Base version: `/api/v1`
 - `PATCH /api/v1/tasks/{taskId}/status`
 - `POST /api/v1/tasks/{taskId}/comments`
 
-## Database
+---
 
-Default connection string:
+## Tech Stack / Dependencies
 
-```json
-"DefaultConnection": "Server=DESKTOP-2DOKIE3\\SQLEXPRESS;Database=ProjectManagementSaaSDb;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True;Encrypt=False"
-```
+Core technologies used across the solution:
 
-Current behavior:
+- ASP.NET Core Web API (`Microsoft.NET.Sdk.Web`)
+- Entity Framework Core + SQL Server provider
+- JWT Bearer authentication
+- API Versioning (`Asp.Versioning.Mvc`)
+- Swagger/OpenAPI (`Swashbuckle.AspNetCore`)
+- Serilog (console + rolling file sink)
+- BCrypt for password hashing
+- In-memory caching (`Microsoft.Extensions.Caching.Memory`)
 
-- the app is configured for the local SQL Server instance `DESKTOP-2DOKIE3\\SQLEXPRESS`
-- the schema is created automatically on startup with `Database.EnsureCreated()`
-- EF migrations are configured in the solution but an initial migration has not yet been generated
+---
 
-## How to Run
+## Setup (Local Development)
 
 ### Prerequisites
 
-- .NET 9 SDK installed
-- SQL Server LocalDB available on the machine
+- **.NET SDK 9.x** (projects target `net9.0`)
+- **SQL Server** (SQL Express / LocalDB / full SQL Server) *or* Docker
 
-### Run the API and UI
+### Configuration
+
+The host uses `src/MultiTenantWorkspace.Web/appsettings.json` and supports environment variable overrides.
+
+Recommended: set the connection string per machine:
+
+```powershell
+$env:ConnectionStrings__DefaultConnection="Server=localhost;Database=ProjectManagementSaaSDb;Trusted_Connection=True;TrustServerCertificate=True;Encrypt=False"
+```
+
+JWT configuration keys to override outside dev:
+
+- `Jwt__Key`
+- `Jwt__Issuer`
+- `Jwt__Audience`
+- `Jwt__ExpiryMinutes`
+
+### Run (API + UI)
 
 ```powershell
 dotnet run --project src/MultiTenantWorkspace.Web
 ```
 
-Default URLs from launch settings:
+Open:
 
-- `http://localhost:5115`
-- `https://localhost:7192`
+- UI: `http://localhost:5115/` (or the port from `launchSettings.json`)
+- Swagger: `http://localhost:5115/swagger`
 
-### Run with Docker
+### Database initialization & seed
 
-The repository now includes Docker support for both the API and SQL Server.
+On startup, the host currently:
 
-Requirements:
+- Ensures the database exists (`EnsureCreated()`)
+- Seeds demo data if the database is empty
 
-- Docker Desktop or Docker Engine with Compose support
+Entry point: `src/MultiTenantWorkspace.Web/Program.cs`
 
-Start the stack:
+### Tests
+
+```powershell
+dotnet test MultiTenantWorkspace.sln
+```
+
+---
+
+## Run with Docker
+
+Start:
 
 ```powershell
 docker compose up --build
 ```
 
-Container endpoints:
+Endpoints:
 
-- API UI and Swagger: `http://localhost:8080`
-- SQL Server: `localhost,1433`
+- API + UI + Swagger: `http://localhost:8080`
+- SQL Server: `localhost:1433`
 
-Notes:
-
-- the API uses `ConnectionStrings__DefaultConnection` to connect to the `sqlserver` service
-- SQL connection retries are enabled for container startup timing
-- API logs are persisted in the `api-logs` Docker volume
-- SQL data is persisted in the `sqlserver-data` Docker volume
-
-Stop the stack:
+Stop:
 
 ```powershell
 docker compose down
 ```
 
-### Demo Seed Data
+---
 
-On the first run, the application seeds a demo workspace automatically if the database is empty.
+## Step-by-step Refactoring Roadmap (to production-ready)
 
-Seeded organization:
+The intent is to harden the system **progressively**, while preserving behavior and testability:
 
-- `Contoso Delivery Hub`
-- slug: `contoso-delivery`
+1. **Analyze the current structure**
+   - Verify boundaries are respected and duplication is identified.
+2. **Redesign the Application layer around use cases**
+   - Keep request/response models minimal, centralize validation, reduce surface area.
+3. **Harden tenant isolation**
+   - Ensure every read/write is tenant-scoped; enforce centrally via the current-user context.
+4. **Production-grade persistence**
+   - Add EF Core migrations, avoid `EnsureCreated()` outside dev, make seeding environment-aware.
+5. **Keep dependencies lean**
+   - Remove unused packages/services; keep only what supports core workflows.
+6. **Improve observability**
+   - Structured logging, correlation IDs, consistent error payloads.
+7. **UI polish without bloat**
+   - Continue using reusable layout primitives; avoid “feature creep” in the console UI.
+8. **Increase confidence with targeted tests**
+   - Prioritize auth flows, tenant boundaries, project/task lifecycle.
 
-Seeded users:
+---
 
-- Admin: `admin@contoso-demo.com`
-- Manager: `manager@contoso-demo.com`
-- Member: `member@contoso-demo.com`
+## Notes
 
-Shared password:
+- `src/ProjectManagementSaaS.Api` exists as an alternate/legacy API host. The solution (`MultiTenantWorkspace.sln`) uses `src/MultiTenantWorkspace.Web` as the primary host.
 
-- `Password123!`
-
-Seeded content includes:
-
-- 2 demo projects
-- 3 demo tasks
-- 2 task comments
-- initial activity logs
-
-### Build the Solution
-
-```powershell
-dotnet build MultiTenantWorkspace.sln
-```
-
-### Run Tests
-
-```powershell
-dotnet test MultiTenantWorkspace.sln --no-build
-```
-
-## GitHub Actions
-
-The repository now includes a GitHub Actions pipeline at `.github/workflows/ci.yml`.
-
-Workflow behavior:
-
-- runs on pushes to `main`
-- runs on pull requests targeting `main`
-- supports manual runs with `workflow_dispatch`
-- restores, builds, and tests the .NET solution in `Release`
-- uploads `.trx` test results as a workflow artifact
-- validates the Docker image build using the root `Dockerfile`
-
-## Built-in UI Layout
-
-The application includes a built-in static UI hosted by the API.
-
-### Layout Sections
-
-- top navigation bar
-- left sidebar menu
-- overview dashboard
-- authentication panel
-- organization workspace panel
-- projects and tasks panel
-- request console
-
-### UI Purpose
-
-The UI is intended for:
-
-- demo presentation
-- interview showcase
-- portfolio display
-- quick manual testing without Postman
-
-## Security Notes
-
-- Passwords are hashed with BCrypt
-- JWT authentication is enabled for protected endpoints
-- Role checks are applied on sensitive operations
-- Tenant scoping is enforced through claims-based current user context
-
-## Testing
-
-Included tests cover application-layer behavior for:
-
-- successful organization registration
-- invalid login behavior
-- allowed task status update for assigned member
-- forbidden task status update for unrelated member
-
-## Current Limitations
-
-- No frontend framework; UI uses plain HTML/CSS/JavaScript
-- No initial EF migration file generated yet
-- No advanced reporting/dashboard widgets yet
-- No file attachments support yet
-
-## Suggested Next Improvements
-
-- Add EF Core migrations
-- Add seed/demo data
-- Add project details page and task tables/cards
-- Add richer user management screens
-- Add Serilog or structured logging
-- Add Docker support
-- Add GitHub Actions pipeline
-
-## Why This Project Is Good for Portfolio or Interviews
-
-This project demonstrates:
-
-- backend architecture design
-- real-world multi-tenant thinking
-- secure authentication and authorization
-- layered separation of concerns
-- repository and unit of work patterns
-- EF Core with SQL Server
-- API versioning and Swagger
-- a runnable UI for demonstration
-
-It is a solid showcase project for .NET backend, enterprise application design, and interview presentation.

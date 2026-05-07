@@ -61,6 +61,39 @@ const dashboardOpenTasksMeta = document.getElementById("dashboardOpenTasksMeta")
 const taskStatusChart = document.getElementById("taskStatusChart");
 const teamChart = document.getElementById("teamChart");
 const navLinks = Array.from(document.querySelectorAll(".nav-link"));
+const contentSections = Array.from(document.querySelectorAll(".content-section"));
+
+function setActiveNav(activeId) {
+    navLinks.forEach(link => {
+        link.classList.toggle("active", link.getAttribute("href") === `#${activeId}`);
+    });
+}
+
+function getActiveSectionIdFromViewport() {
+    let activeId = contentSections[0]?.id ?? "overview";
+
+    for (const section of contentSections) {
+        const bounds = section.getBoundingClientRect();
+        if (bounds.top <= 140 && bounds.bottom >= 140) {
+            activeId = section.id;
+            break;
+        }
+    }
+
+    return activeId;
+}
+
+function setActiveSectionFromHash() {
+    const hashId = window.location.hash?.replace("#", "");
+    if (!hashId) {
+        setActiveNav(getActiveSectionIdFromViewport());
+        return;
+    }
+
+    if (contentSections.some(section => section.id === hashId)) {
+        setActiveNav(hashId);
+    }
+}
 
 function escapeHtml(value) {
     return String(value ?? "")
@@ -471,7 +504,12 @@ async function apiFetch(url, options = {}) {
 }
 
 function bindForm(formId, handler) {
-    document.getElementById(formId).addEventListener("submit", async event => {
+    const form = document.getElementById(formId);
+    if (!form) {
+        return;
+    }
+
+    form.addEventListener("submit", async event => {
         event.preventDefault();
         const formData = new FormData(event.target);
 
@@ -675,7 +713,7 @@ bindForm("taskCommentForm", async formData, form) => {
     await loadTaskDetails(state.selectedTaskId);
 });
 
-deleteProjectBtn.addEventListener("click", async () => {
+deleteProjectBtn?.addEventListener("click", async () => {
     if (!state.selectedProjectId) {
         writeOutput(responseOutput, "Select a project first.");
         return;
@@ -698,7 +736,7 @@ deleteProjectBtn.addEventListener("click", async () => {
     }
 });
 
-deleteTaskBtn.addEventListener("click", async () => {
+deleteTaskBtn?.addEventListener("click", async () => {
     if (!state.selectedTaskId) {
         writeOutput(responseOutput, "Select a task first.");
         return;
@@ -723,7 +761,7 @@ deleteTaskBtn.addEventListener("click", async () => {
     }
 });
 
-document.getElementById("loadWorkspaceBtn").addEventListener("click", async () => {
+document.getElementById("loadWorkspaceBtn")?.addEventListener("click", async () => {
     try {
         await loadWorkspace();
     } catch (error) {
@@ -731,7 +769,7 @@ document.getElementById("loadWorkspaceBtn").addEventListener("click", async () =
     }
 });
 
-document.getElementById("loadProjectsBtn").addEventListener("click", async () => {
+document.getElementById("loadProjectsBtn")?.addEventListener("click", async () => {
     try {
         await loadProjects();
     } catch (error) {
@@ -739,7 +777,7 @@ document.getElementById("loadProjectsBtn").addEventListener("click", async () =>
     }
 });
 
-document.getElementById("signOutBtn").addEventListener("click", async () => {
+document.getElementById("signOutBtn")?.addEventListener("click", async () => {
     try {
         if (state.token && state.refreshToken) {
             await apiFetch("/api/v1/auth/logout", {
@@ -778,21 +816,19 @@ async function tryRefreshSession() {
     }
 }
 
+let scrollRaf = 0;
 window.addEventListener("scroll", () => {
-    let activeId = "overview";
-
-    for (const section of document.querySelectorAll(".content-section")) {
-        const bounds = section.getBoundingClientRect();
-        if (bounds.top <= 140 && bounds.bottom >= 140) {
-            activeId = section.id;
-            break;
-        }
+    if (scrollRaf) {
+        return;
     }
 
-    navLinks.forEach(link => {
-        link.classList.toggle("active", link.getAttribute("href") === `#${activeId}`);
+    scrollRaf = window.requestAnimationFrame(() => {
+        scrollRaf = 0;
+        setActiveNav(getActiveSectionIdFromViewport());
     });
 });
+
+window.addEventListener("hashchange", setActiveSectionFromHash);
 
 setAuthState(state.token);
 renderAssigneeOptions();
@@ -801,4 +837,5 @@ renderProjectOptions(taskEditProjectSelect, "Load projects first");
 renderDashboard();
 updateSessionSummary(null);
 writeOutput(responseOutput, "Ready. Register a workspace or log in.");
+setActiveSectionFromHash();
 tryRefreshSession();
